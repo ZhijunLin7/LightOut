@@ -21,6 +21,7 @@ public class Juego extends AppCompatActivity {
 
     private GridLayout gridJuego;
     private GestureDetectorCompat gestureDetector;
+    private TextView [][] textViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +38,17 @@ public class Juego extends AppCompatActivity {
         gridJuego.getLayoutParams().height=width-40;
 
 
-        for (int i = 0; i < 16; i++) {
-            this.añadirTextview(gridJuego);
-        }
+        textViews = new TextView[4][4];
+        this.añadirTextview(gridJuego);
+
 
         int childCount =gridJuego.getChildCount();
         Toast.makeText(Juego.this, ""+childCount, Toast.LENGTH_SHORT).show();
 
+        this.anadirOnclickListener(textViews);
+
     }
+    
     //Gesture detector
     public class GestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
@@ -64,39 +68,66 @@ public class Juego extends AppCompatActivity {
     //Añadir textview al Gridlayout
     public void añadirTextview(GridLayout gridJuego) {
 
-        GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams(
-                GridLayout.spec(GridLayout.UNDEFINED, 1f),
-                GridLayout.spec(GridLayout.UNDEFINED, 1f)
-        );
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
 
-        TextView textView = new TextView(this);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(30);
-        textView.setTypeface(Typeface.DEFAULT_BOLD);
-        textView.setBackgroundResource(R.drawable.circulo_lightout);
-        textView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-        textView.setTextColor(Color.WHITE);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textView.setBackgroundColor(Color.WHITE);
-                int num=gridJuego.indexOfChild(textView);
-                Toast.makeText(Juego.this, "Soy :"+num, Toast.LENGTH_SHORT).show();
-                if (gridJuego.getChildAt(num-4) != null) {
-                    gridJuego.getChildAt(num-4).setBackgroundColor(Color.WHITE);
-                }
-                if (gridJuego.getChildAt(num+1) != null) {
-                    gridJuego.getChildAt(num+1).setBackgroundColor(Color.WHITE);
-                }
-                if (gridJuego.getChildAt(num-1) != null) {
-                    gridJuego.getChildAt(num-1).setBackgroundColor(Color.WHITE);
-                }
-                if (gridJuego.getChildAt(num+4) != null) {
-                    gridJuego.getChildAt(num+4).setBackgroundColor(Color.WHITE);
-                }
+                // Poner el row and colum weight
+                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams(
+                        GridLayout.spec(GridLayout.UNDEFINED, 1f),
+                        GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                );
+
+                // Poner estilo al textview
+                TextView textView = new TextView(this);
+                textView.setGravity(Gravity.CENTER);
+                textView.setTextSize(30);
+                textView.setTypeface(Typeface.DEFAULT_BOLD);
+                textView.setBackgroundResource(R.drawable.circulo_lightout);
+                textView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+                textView.setTextColor(Color.WHITE);
+
+                gridJuego.addView(textView, layoutParams);
+                textViews[i][j]=textView;
+
             }
-        });
-
-        gridJuego.addView(textView, layoutParams);
+        }
     }
+
+    public void anadirOnclickListener(TextView [][] textViews){
+        TextView textView;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                textView=textViews[i][j];
+                int finalI = i;
+                int finalJ = j;
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        pintar(textViews,finalI,finalJ);
+                        Toast.makeText(Juego.this, "i="+ finalI+"j="+finalJ, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        }
+    }
+
+    public void pintar(TextView [][] textViews,int x , int y){
+        apagarEncender(textViews[x][y]);
+
+
+    }
+    public void apagarEncender(TextView textView){
+
+        if (textView.getBackground()==R.drawable.circulo_lighton) {
+            textView.setBackgroundResource(R.drawable.circulo_lightout);
+        }
+        else {
+            textView.setBackgroundResource(R.drawable.circulo_lighton);
+        }
+
+
+    }
+
+
 }
