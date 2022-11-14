@@ -113,18 +113,52 @@ public class Juego extends AppCompatActivity {
     }
 
     public void pintar(TextView [][] textViews,int x , int y){
+
         apagarEncender(textViews[x][y]);
+
+
+        try {
+            if (textViews[x+1][y] != null) {
+                apagarEncender(textViews[x+1][y]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (textViews[x-1][y] != null) {
+                apagarEncender(textViews[x-1][y]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (textViews[x][y+1] != null) {
+                apagarEncender(textViews[x][y+1]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (textViews[x][y-1] != null) {
+                apagarEncender(textViews[x][y-1]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
 
 
     }
     public void apagarEncender(TextView textView){
-
-        if (textView.getBackground()==R.drawable.circulo_lighton) {
-            textView.setBackgroundResource(R.drawable.circulo_lightout);
-        }
-        else {
+        if (textView.getBackground().getConstantState() == getResources().getDrawable(R.drawable.circulo_lightout).getConstantState()) {
             textView.setBackgroundResource(R.drawable.circulo_lighton);
         }
+        else {
+            textView.setBackgroundResource(R.drawable.circulo_lightout);
+        }
+
 
 
     }
