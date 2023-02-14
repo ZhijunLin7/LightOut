@@ -13,8 +13,11 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.lightout.databinding.ActivityJuegoBinding;
+
 public class Juego extends AppCompatActivity {
 
+    private ActivityJuegoBinding binding;
     private GridLayout gridJuego;
     private GestureDetectorCompat gestureDetector;
     private Cell[][] cells;
@@ -22,17 +25,20 @@ public class Juego extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_juego);
+        binding=ActivityJuegoBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
 
-        gridJuego = (GridLayout) findViewById(R.id.Gridjuego);
+        gridJuego = binding.Gridjuego;
 
         cells= new Cell[4][4];
         this.configurarGrid(gridJuego, 4);
+        this.anadirOnclickListener(cells,4);
 
-        this.anadirOnclickListener(cells);
+        this.hacerJuego(cells);
 
-        hacerJuego(cells);
+
+        binding.newgame.setOnClickListener(view -> hacerJuego(cells));
     }
 
     //----------------------------------------------------------------------------------------------
@@ -49,9 +55,9 @@ public class Juego extends AppCompatActivity {
                 );
                 layoutParams.width = 0;
                 layoutParams.height = 0;
-                gridJuego.setBackgroundColor(Color.GRAY);
 
-                Cell cell= new Cell(this,0,false);
+
+                Cell cell= new Cell(this,false,false);
                 cell.setBackgroundResource(R.drawable.zombi_sin_color);
                 cell.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
                 gridJuego.addView(cell, layoutParams);
@@ -79,19 +85,16 @@ public class Juego extends AppCompatActivity {
 
     }
 
-    public void anadirOnclickListener(ImageButton[][] imageButtons) {
+    public void anadirOnclickListener(ImageButton[][] imageButtons,int numColumnaFila) {
         ImageButton imageButton;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < numColumnaFila; i++) {
+            for (int j = 0; j < numColumnaFila; j++) {
                 imageButton = imageButtons[i][j];
                 int finalI = i;
                 int finalJ = j;
-                imageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        apagarEncender(finalI,finalJ);
-                        Toast.makeText(Juego.this, "i=" + finalI + "j=" + finalJ, Toast.LENGTH_SHORT).show();
-                    }
+                imageButton.setOnClickListener(view -> {
+                    apagarEncender(finalI,finalJ);
+                    Toast.makeText(Juego.this, "i=" + finalI + "j=" + finalJ, Toast.LENGTH_SHORT).show();
                 });
             }
         }
@@ -102,37 +105,31 @@ public class Juego extends AppCompatActivity {
     public void  hacerJuego(Cell [][] cells){
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
+                this.reniciarCell(cells[i][j]);
                 int num = (int) (Math.random()*2);
                 if (num == 0) {
                     this.apagarEncender(i,j);
                 }
             }
         }
-
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Log.d("testeo", "hacerJuego: "+cells[i][j].getContador());
-            }
-        }
     }
 
     public void apagarEncender(int i,int j){
-        cells[i][j].setContador((cells[i][j].getContador()+1));
+
+        this.cambiarEstadoSolucion(cells[i][j]);
+
         this.cambiarEstado(cells[i][j]);
+        
         if (i > 0) {
-            cells[i-1][j].setContador((cells[i-1][j].getContador()+1));
             this.cambiarEstado(cells[i-1][j]);
         }
         if (i < cells.length-1) {
-            cells[i+1][j].setContador((cells[i+1][j].getContador()+1));
             this.cambiarEstado(cells[i+1][j]);
         }
         if (j > 0) {
-            cells[i][j-1].setContador((cells[i][j-1].getContador()+1));
             this.cambiarEstado(cells[i][j-1]);
         }
         if (j < cells.length-1) {
-            cells[i][j+1].setContador((cells[i][j+1].getContador()+1));
             this.cambiarEstado(cells[i][j+1]);
         }
     }
@@ -145,6 +142,15 @@ public class Juego extends AppCompatActivity {
             cell.setEncendido(true);
             cell.setBackgroundResource(R.drawable.zombi);
         }
+    }
+
+    public void cambiarEstadoSolucion(Cell cell) {
+        cell.setSolucion(!cell.isSolucion());
+    }
+
+    public void reniciarCell(Cell cell){
+        cell.setSolucion(false);
+        cell.setEncendido(false);
     }
 
 

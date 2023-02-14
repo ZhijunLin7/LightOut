@@ -8,9 +8,9 @@
 
     <TextView
         android:id="@+id/view2048"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:layout_margin="40dp"
         android:text="LightOut"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -21,27 +21,27 @@
     <!--Puntos-->
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="80dp"
+        android:layout_width="0dp"
         android:layout_height="80dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp">
+        android:layout_margin="20dp">
 
         <TextView
             android:id="@+id/Puntos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Puntos"
+            android:text="Timer"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="10:00"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
@@ -49,27 +49,27 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="80dp"
+        android:layout_width="0dp"
         android:layout_height="80dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp">
+        android:layout_margin="20dp">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Mejor"
+            android:text="Pasos"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="50"
             android:textSize="20sp"
             android:textStyle="bold"/>
     </LinearLayout>
@@ -86,20 +86,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linearLayout">
 
-        <Button
+        <ImageButton
+            android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Boton" />
-
-        <Button
+            android:src="@drawable/img_home"
+            android:layout_weight="1"/>
+        <ImageButton
+            android:id="@+id/solution"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Boton" />
-
-        <Button
+            android:src="@drawable/img_solution"
+            android:layout_weight="3"/>
+        <ImageButton
+            android:id="@+id/newgame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Boton" />
+            android:src="@drawable/img_restart"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

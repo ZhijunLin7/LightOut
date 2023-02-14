@@ -7,21 +7,13 @@ import androidx.annotation.NonNull;
 
 public class Cell extends androidx.appcompat.widget.AppCompatImageButton {
 
-    private int contador;
+    private boolean solucion;
     private boolean encendido;
 
-    public Cell(@NonNull Context context, int contador, boolean encendido) {
+    public Cell(@NonNull Context context,boolean solucion, boolean encendido) {
         super(context);
-        this.contador = contador;
+        this.solucion=solucion;
         this.encendido = encendido;
-    }
-
-    public int getContador() {
-        return contador;
-    }
-
-    public void setContador(int contador) {
-        this.contador = contador;
     }
 
     public boolean isEncendido() {
@@ -30,5 +22,13 @@ public class Cell extends androidx.appcompat.widget.AppCompatImageButton {
 
     public void setEncendido(boolean encendido) {
         this.encendido = encendido;
+    }
+
+    public boolean isSolucion() {
+        return solucion;
+    }
+
+    public void setSolucion(boolean solucion) {
+        this.solucion = solucion;
     }
 }
