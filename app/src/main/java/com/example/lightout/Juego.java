@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -23,7 +27,7 @@ public class Juego extends AppCompatActivity {
     private Cell[][] cells;
     private int pasos;
 
-    @SuppressLint("ClickableViewAccessibility")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,23 +43,6 @@ public class Juego extends AppCompatActivity {
 
         this.hacerJuego(cells);
 
-
-        binding.newgame.setOnClickListener(view -> hacerJuego(cells));
-
-        binding.solution.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        pintarRespuesta(cells);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        pintar(cells);
-                        break;
-                }
-                return false;
-            }
-        });
     }
 
     //----------------------------------------------------------------------------------------------
@@ -97,12 +84,38 @@ public class Juego extends AppCompatActivity {
         gridjuego.setColumnCount(numColumnaFila);
         gridjuego.setRowCount(numColumnaFila);
 
-
         this.anadirCell(gridjuego, numColumnaFila);
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public void anadirOnclickListener(ImageButton[][] imageButtons,int numColumnaFila) {
+
+        binding.home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Juego.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.solution.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        pintarRespuesta(cells);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        pintar(cells);
+                        break;
+                }
+                return false;
+            }
+        });
+
+        binding.newgame.setOnClickListener(view -> hacerJuego(cells));
+
         ImageButton imageButton;
         for (int i = 0; i < numColumnaFila; i++) {
             for (int j = 0; j < numColumnaFila; j++) {
@@ -123,6 +136,10 @@ public class Juego extends AppCompatActivity {
 
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
+                // Poner enable al los image buttons cells
+                cells[i][j].setEnabled(true);
+
+                // 50% que este encendido
                 int num = (int) (Math.random()*2);
                 if (num == 0) {
                     this.cambiarEstadoSolucion(cells[i][j]);
@@ -217,13 +234,53 @@ public class Juego extends AppCompatActivity {
                 }
             }
         }
-
         if (this.pasos > 0 ) {
             if (ganado) {
-                Toast.makeText(this,"Has ganado",Toast.LENGTH_SHORT).show();
+                this.gameDialog(true);
+                this.disableCell(cells);
             }
         }else {
-            Toast.makeText(this,"Has Perdido",Toast.LENGTH_SHORT).show();
+            this.gameDialog(false);
+            this.disableCell(cells);
+        }
+    }
+
+    public void gameDialog(boolean ganado){
+        String msg;
+        if (ganado) {
+            msg="Has ganado!!! ¿quieres jugar otra?";
+        }else{
+            msg="Has perdido T-T ¿quieres jugar otra?";
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg)
+                .setPositiveButton("Jugar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        hacerJuego(cells);
+                    }
+                })
+                .setNegativeButton("Menu", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(Juego.this,MainActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNeutralButton("solucion",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        pintarRespuesta(cells);
+                    }
+                });
+
+        AlertDialog a=builder.create();
+        a.setCancelable(false);
+        a.show();
+    }
+
+    public void disableCell(Cell[][] cells){
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[0].length; j++) {
+               cells[i][j].setEnabled(false);
+            }
         }
     }
 
